@@ -5,6 +5,13 @@
 @font-face {
   font-family: 'Inter';
   src: url('../assets/fonts//Inter-Medium.ttf');
+  font-weight: 600;
+  font-style: bold;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../assets/fonts//Inter-Medium.ttf');
   font-weight: 500;
   font-style: medium;
 }
@@ -31,15 +38,4 @@ a {
 
 * {
   box-sizing: border-box;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-
-  body {
-    color: white;
-    background: black;
-  }
 }
