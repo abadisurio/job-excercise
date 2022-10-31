@@ -2,6 +2,8 @@ import Image from 'next/image'
 import React from 'react'
 import Navbar from '../components/Navbar'
 import arrow from '../assets/image/header-arrow.png'
+import moment from 'moment';
+import 'moment/locale/id';
 import { IoBusinessOutline, IoLocationOutline, IoBriefcaseOutline, IoSearchOutline, IoAddOutline } from "react-icons/io5";
 
 const example = [
@@ -69,6 +71,9 @@ export default function JobList() {
                             <h3 className='font-bold text-2xl mb-6'>Daftar Pekerjaan Terbaru</h3>
                             <ul>
                                 {example.map(item => {
+                                    moment.locale('id')
+                                    const formattedCreatedAt = moment(item.createdAt).format('D MMMM y');
+                                    const formattedcloseAt = moment(item.closeAt).format('D MMMM y');
                                     return (
                                         <li className='flex p-4 border mb-6 rounded-sm'>
                                             {/* <Image
@@ -93,8 +98,8 @@ export default function JobList() {
                                                     </div>
                                                 </div>
                                                 <div className='text-xs text-gray-500 md:text-right'>
-                                                    <h6>Dibuat pada 15 Juni 2022</h6>
-                                                    <h6>Lamar sebelum 15 Juli 2022</h6>
+                                                    <h6>Dibuat pada {formattedCreatedAt}</h6>
+                                                    <h6>Lamar sebelum {formattedcloseAt}</h6>
                                                 </div>
                                             </div>
                                             {/* <h5>{item.logo}</h5> */}
