@@ -50,8 +50,8 @@ const experience = [
 
 export default function JobList() {
     return (
-        <>
-            <div className='h-64 bg-cover bg-right bg-no-repeat flex items-center' style={{ backgroundImage: `url(${arrow.src})` }}>
+        <div className='bg-neutral-900'>
+            <div className='h-64  bg-cover bg-right bg-no-repeat flex items-center text-white' style={{ backgroundImage: `url(${arrow.src})` }}>
                 <div className="container mx-auto">
                     <div className="xs:w-full sm:w-4/5 lg:w-3/5 px-3">
                         <h4 className='text-blue-500 font-bold text-xl'>Dicoding Jobs</h4>
@@ -163,6 +163,6 @@ export default function JobList() {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
