@@ -1,13 +1,18 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaRegBell, FaAngleDown } from "react-icons/fa";
+import { useNavbarHooks } from '../hooks/navbar';
 
 export default function Navbar() {
+
+    const navbar = useNavbarHooks()
+    const variant = navbar.variant
+
     return (
-        <nav className='p-5 flex gap-5 items-center bg-neutral-900 text-white'>
+        <nav className={'p-5 flex gap-5 items-center ' + (variant === 'dark' && 'bg-neutral-900 text-white')}>
             <Link href={""} className="flex gap-3">
-                <Image src={require('../assets/image/main-logo.png')} alt='logo'></Image>
+                <Image src={require('../assets/image/' + (variant === 'dark' ? 'main-logo' : 'dark-logo') + '.png')} alt='logo'></Image>
                 <h6 className='text-xl font-medium'>Jobs</h6>
             </Link>
             <span>|</span>

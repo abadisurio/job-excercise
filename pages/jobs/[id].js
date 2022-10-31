@@ -18,7 +18,8 @@ const detail = {
 }
 
 export default function JobDetail({ jobDetail }) {
-    console.log(jobDetail)
+    // console.log(jobDetail)
+
     return (
         <>
             <div className='container mx-auto pt-8'>

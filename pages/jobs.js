@@ -1,10 +1,11 @@
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Navbar from '../components/Navbar'
 import arrow from '../assets/image/header-arrow.png'
 import moment from 'moment';
 import 'moment/locale/id';
 import { IoBusinessOutline, IoLocationOutline, IoBriefcaseOutline, IoSearchOutline, IoAddOutline } from "react-icons/io5";
+import { useNavbarHooks } from '../hooks/navbar';
 
 const example = [
     { "createdAt": "2022-01-15T13:41:38.118Z", "title": "District Directives Liaison", "logo": "http://loremflickr.com/640/480/technics", "company": "Davis Inc", "location": "Jakarta", "experience": true, "job_type": "Fulltime", "closeAt": "2022-10-06T04:30:31.520Z", "skills": "Backend Developer", "sector": "Integration", "description": "Ut eum tempora quis voluptates mollitia consectetur magni modi. Tempore saepe pariatur est aliquid blanditiis molestiae adipisci. Rem debitis et non sunt esse.\nQuidem eaque tenetur aspernatur magni eum sit assumenda harum ut. Alias nostrum velit velit optio id porro. Adipisci est velit a. Doloremque sed ipsum sit.\nVelit id dolore ut. Quo cupiditate pariatur sint explicabo. Nobis laborum illo doloribus deserunt et non sed. Vitae eos nulla aut voluptatum et nulla ipsa. In libero modi adipisci voluptatem doloremque et est distinctio doloribus. Ut est fugiat provident tenetur et eos eveniet architecto.", "employees": 13553, "id": "1" },
@@ -51,6 +52,16 @@ const experience = [
 
 
 export default function Jobs({ jobs }) {
+
+
+    const navbar = useNavbarHooks()
+    // console.log(navbar);
+    useEffect(() => {
+        navbar.setVariant('dark')
+
+    }, [])
+
+
     // console.log(jobs)
     return (
         <div className='bg-neutral-900'>
@@ -178,7 +189,7 @@ export default function Jobs({ jobs }) {
 
 export async function getStaticProps() {
     const jobs = await fetch('https://6331e3cf3ea4956cfb694be6.mockapi.io/jobs').then(res => res.json());
-    console.log(jobs)
+    // console.log(jobs)
     return {
         props: {
             jobs
