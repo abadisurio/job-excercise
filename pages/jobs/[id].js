@@ -62,7 +62,7 @@ export default function JobDetail({ jobDetail }) {
                     </div>
                 </div>
             </div>
-            <div className='mt-12 mb-6 h-1 w-full border-b-2 border-neutral-200 '></div>
+            <div className='mt-12 mb-6 h-1 w-full border-b-2 border-neutral-100 '></div>
             <div className='md:w-3/5 mx-auto'>
                 <div className="flex mb-8">
                     <div className="bg-blue-50 border border-blue-400 px-4 py-2 rounded-full mr-4">
@@ -111,7 +111,7 @@ export default function JobDetail({ jobDetail }) {
                     <li>Terbuka dalam menerima feedback dari orang lain.</li>
                     <li>Percaya diri dan dapat dipercaya.</li>
                 </ul>
-                <div className='border border-gray-200 rounded-sm p-4'>
+                <div className='border border-gray-200 rounded-sm p-4 mb-48'>
                     <h1 className='text-xl font-bold mb-2'>Tertarik?</h1>
                     <ul className='text-lg text-gray-700 list-disc pl-5'>
                         <li>Kirimkan CV dan Portofolio terbaik kamu.</li>
