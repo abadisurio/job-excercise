@@ -50,7 +50,8 @@ const experience = [
 ]
 
 
-export default function JobList() {
+export default function Jobs({ jobs }) {
+    // console.log(jobs)
     return (
         <div className='bg-neutral-900'>
             <div className='h-64  bg-cover bg-right bg-no-repeat flex items-center text-white' style={{ backgroundImage: `url(${arrow.src})` }}>
@@ -59,7 +60,7 @@ export default function JobList() {
                         <h4 className='text-blue-500 font-bold text-xl'>Dicoding Jobs</h4>
                         <h1 className='font-bold text-4xl'>
                             Temukan lowongan yang cocok untuk Anda
-                            <Image className='ml-3 inline ' src={require('../assets/image/header-art.png')} />
+                            <Image className='ml-3 inline ' src={require('../assets/image/header-art.png')} alt='arrow' />
                         </h1>
                     </div>
                 </div>
@@ -70,19 +71,21 @@ export default function JobList() {
                         <div className='grow'>
                             <h3 className='font-bold text-2xl mb-6'>Daftar Pekerjaan Terbaru</h3>
                             <ul>
-                                {example.map(item => {
+                                {jobs.map((item, index) => {
                                     moment.locale('id')
                                     const formattedCreatedAt = moment(item.createdAt).format('D MMMM y');
                                     const formattedcloseAt = moment(item.closeAt).format('D MMMM y');
                                     return (
-                                        <li className='flex p-4 border mb-6 rounded-sm'>
+                                        <li className='flex p-4 border mb-6 rounded-sm' key={index}>
                                             {/* <Image
                                                 loader={({ src, width, quality }) => item.logo} width={96} height={96} /> */}
                                             <Image
+                                                alt={item.title}
                                                 className="w-24 h-24 object-cover mr-4"
-                                                loader={({ src, width, quality }) => item.logo}
+                                                loader={() => item.logo}
                                                 src={item.logo}
-                                                width={96} height={96} />
+                                                width={96}
+                                                height={96} />
                                             <div className='grow grid md:grid-cols-2'>
                                                 <div className='grow'>
                                                     <h5 className='font-bold'>{item.title}</h5>
@@ -118,9 +121,9 @@ export default function JobList() {
                                     <h3 className='font-bold text-lg mb-4'>Keahlian</h3>
                                     {expertise.map((item, index) => {
                                         return (
-                                            <div class="flex items-center mb-4" key={index}>
-                                                <input id={'expertise-' + index} type="checkbox" value="" class="w-4 h-4  rounded border-gray-300" />
-                                                <label for={'expertise-' + index} class="ml-2">{item.name}</label>
+                                            <div className="flex items-center mb-4" key={index}>
+                                                <input id={'expertise-' + index} type="checkbox" value="" className="w-4 h-4  rounded border-gray-300" />
+                                                <label htmlFor={'expertise-' + index} className="ml-2">{item.name}</label>
                                             </div>
 
                                         )
@@ -131,9 +134,9 @@ export default function JobList() {
                                     <h3 className='font-bold text-lg mb-4'>Tipe Pekerjaan</h3>
                                     {type.map((item, index) => {
                                         return (
-                                            <div class="flex items-center mb-4" key={index}>
-                                                <input id={'type-' + index} type="checkbox" value="" class="w-4 h-4  rounded border-gray-300" />
-                                                <label for={'type-' + index} class="ml-2">{item.name}</label>
+                                            <div className="flex items-center mb-4" key={index}>
+                                                <input id={'type-' + index} type="checkbox" value="" className="w-4 h-4  rounded border-gray-300" />
+                                                <label htmlFor={'type-' + index} className="ml-2">{item.name}</label>
                                             </div>
 
                                         )
@@ -143,9 +146,9 @@ export default function JobList() {
                                     <h3 className='font-bold text-lg mb-4'>Kota</h3>
                                     {city.map((item, index) => {
                                         return (
-                                            <div class="flex items-center mb-4" key={index}>
-                                                <input id={'city-' + index} type="checkbox" value="" class="w-4 h-4  rounded border-gray-300" />
-                                                <label for={'city-' + index} class="ml-2">{item.name}</label>
+                                            <div className="flex items-center mb-4" key={index}>
+                                                <input id={'city-' + index} type="checkbox" value="" className="w-4 h-4  rounded border-gray-300" />
+                                                <label htmlFor={'city-' + index} className="ml-2">{item.name}</label>
                                             </div>
 
                                         )
@@ -155,9 +158,9 @@ export default function JobList() {
                                     <h3 className='font-bold text-lg mb-4'>Pengalaman</h3>
                                     {experience.map((item, index) => {
                                         return (
-                                            <div class="flex items-center mb-4" key={index}>
-                                                <input id={'experience-' + index} type="checkbox" value="" class="w-4 h-4  rounded border-gray-300" />
-                                                <label for={'experience-' + index} class="ml-2">{item.name}</label>
+                                            <div className="flex items-center mb-4" key={index}>
+                                                <input id={'experience-' + index} type="checkbox" value="" className="w-4 h-4  rounded border-gray-300" />
+                                                <label htmlFor={'experience-' + index} className="ml-2">{item.name}</label>
                                             </div>
 
                                         )
@@ -170,4 +173,15 @@ export default function JobList() {
             </div>
         </div>
     )
+}
+
+
+export async function getStaticProps() {
+    const jobs = await fetch('https://6331e3cf3ea4956cfb694be6.mockapi.io/jobs').then(res => res.json());
+    console.log(jobs)
+    return {
+        props: {
+            jobs
+        }
+    }
 }

@@ -7,7 +7,7 @@ export default function Navbar() {
     return (
         <nav className='p-5 flex gap-5 items-center bg-neutral-900 text-white'>
             <Link href={""} className="flex gap-3">
-                <Image src={require('../assets/image/main-logo.png')}></Image>
+                <Image src={require('../assets/image/main-logo.png')} alt='logo'></Image>
                 <h6 className='text-xl font-medium'>Jobs</h6>
             </Link>
             <span>|</span>
@@ -15,7 +15,7 @@ export default function Navbar() {
             <Link href={""}><h6 className='font-light'>Hiring</h6></Link>
             <div className="grow"></div>
             <Link href={""} className="flex items-center gap-3">
-                <Image class="inline-block h-8 w-8 rounded-full ring-2 ring-offset-1 ring-offset-neutral-900 ring-blue-500 object-cover" src={require('../assets/image/default-avatar.jpg')} alt="{user.handle}" />
+                <Image className="inline-block h-8 w-8 rounded-full ring-2 ring-offset-1 ring-offset-neutral-900 ring-blue-500 object-cover" src={require('../assets/image/default-avatar.jpg')} alt="{user.handle}" />
                 <FaAngleDown color='grey' />
             </Link>
             <Link href={""}>

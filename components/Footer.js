@@ -8,7 +8,7 @@ export default function Footer() {
     return (
         <footer>
             <div className="container mx-auto px-3 pb-32">
-                <Image className='mb-8' src={require('../assets/image/dark-logo.png')} />
+                <Image className='mb-8' src={require('../assets/image/dark-logo.png')} alt='logo' />
                 <p className='text-lg'>
                     Dicoding Space <br />
                     Jl. Batik Kumeli No.50, Sukaluyu, <br />
