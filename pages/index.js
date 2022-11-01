@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import arrow from '../assets/image/header-arrow.png'
 import moment from 'moment';
 import 'moment/locale/id';
@@ -8,8 +8,9 @@ import { IoBusinessOutline, IoLocationOutline, IoBriefcaseOutline, IoSearchOutli
 import { useNavbarHooks } from '../hooks/navbar';
 import { getAllJobCollection } from '../lib/api';
 import Link from 'next/link';
+import { isWithin } from '../lib/util';
 
-const expertise = [
+const skills = [
   { "id": "0", "name": "Back-End Developer" },
   { "id": "1", "name": "Front-End Developer" },
   { "id": "2", "name": "Product Manager" },
@@ -17,13 +18,13 @@ const expertise = [
   { "id": "4", "name": "iOS Developer" },
 ]
 
-const type = [
+const job_type = [
   { "id": "0", "name": "Full-Time" },
   { "id": "1", "name": "Freelance" },
   { "id": "2", "name": "Intern" },
   { "id": "3", "name": "Bisa Remote" },
 ]
-const city = [
+const location = [
   { "id": "0", "name": "Bandung" },
   { "id": "1", "name": "Jakarta" },
   { "id": "2", "name": "Yogyakarta" },
@@ -36,12 +37,182 @@ const experience = [
   { "id": "4", "name": "Lebih dari 10 tahun" },
 ]
 
-export default function Home({ jobCollection }) {
+const initialFilters = {
+  skills,
+  job_type,
+  location,
+  experience,
+}
+
+export default function Home({ jobCollection = [] }) {
 
   const navbar = useNavbarHooks()
+  const [tempCollection, setTempCollection] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [lastFilter, setlastFilter] = useState('')
+  const [filters, setFilters] = useState(
+    {
+      skills: skills.map(() => false),
+      job_type: job_type.map(() => false),
+      location: location.map(() => false),
+      experience: experience.map(() => false)
+    }
+  )
+  const [isSearching, setIsSearching] = useState(false)
+
   useEffect(() => {
     navbar.setVariant('dark')
+    // setTempCollection(jobCollection)
   }, [])
+
+  useEffect(() => {
+    if (searchTerm !== '') setIsSearching(true)
+    const delayDebounceFn = setTimeout(() => {
+      // console.log(searchTerm)
+      searchJob(searchTerm)
+    }, 500)
+
+    return () => clearTimeout(delayDebounceFn)
+  }, [searchTerm])
+
+  useEffect(() => {
+    // const collection = []
+    // jobCollection.map(jobItem => {
+    //   // Object.keys(item).map(filterItem => {
+    //   //   console.log(filterItem)
+    //   //   console.log(filters[filterItem])
+
+    //   // })
+
+    //   Object.keys(filters).map(filterItem => {
+    //     // console.log(filterItem)
+    //     // console.log(filters[filterItem])
+
+    //     filters[filterItem].map((item, index) => {
+    //       // console.log(item, index)
+    //       if (item) {
+    //         // console.log(filterItem, initialFilters[filterItem][index].name)
+    //         // console.log(initialFilters[filterItem][index].name)
+    //         // console.log(initialFilters[filterItem][index].name === jobItem[filterItem])
+    //         if (isWithin(initialFilters[filterItem][index].name, jobItem[filterItem])) {
+    //           // console.log(jobItem)
+    //           collection.push(jobItem)
+    //         }
+    //       }
+    //     })
+    //   })
+    //   // isWithin(initialFilters[filterItem][index].name, item[filterItem])
+    // })
+
+    const collection = jobCollection.filter((item) => {
+      for (const category in filters) {
+        // console.log(category)
+        // console.log(filters[category])
+        for (let index = 0; index < filters[category].length; index++) {
+          // console.log()
+          if (filters[category][index]) {
+            if (!isWithin(initialFilters[category][index].name, item[category])) {
+
+              console.log(initialFilters[category][index].name)
+              return true
+            } else {
+              // return true
+            }
+          } else {
+            return false
+          }
+        }
+        // if (item[key] === undefined || item[key] !== filters[key])
+        // return false;
+      }
+      return true;
+    });
+
+    console.log(collection)
+    setTempCollection(collection)
+    // Object.keys(filters).map(filterItem => {
+    //   // console.log(filterItem)
+    //   // console.log(this[filterItem])
+    //   if (filterItem === 'experience') return
+    //   filters[filterItem].map((item, index) => {
+    //     if (item) {
+    //       console.log(filterItem, initialFilters[filterItem][index].name)
+    //       console.log(collection)
+    //     }
+    //     // if(filterItem)
+    //   })
+    //   // tempCollection.filter(item => )
+    // })
+  }, [filters])
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      searchJob(searchTerm)
+    }
+  }
+
+  const searchJob = query => {
+    console.log(query)
+    if (query !== '') {
+      // console.log(jobCollection)
+      const collection = jobCollection.filter(item => isWithin(query, item.title))
+      setTempCollection(collection)
+      setIsSearching(false)
+    } else {
+      // setTempCollection(jobCollection)
+    }
+  }
+
+  const handleFilter = (e) => {
+    setIsSearching(true)
+    const { name, value, checked } = e.target
+    if (name === 'experience') return
+    // console.log(name, value, checked)
+    // console.log(name, lastFilter, name === lastFilter)
+    // setlastFilter(name)
+    setFilters(prev => {
+      const newarr = filters[name]
+      newarr[value] = checked
+      return {
+        ...prev,
+        [name]: newarr
+      }
+    })
+
+    // console.log(initialFilters[name][value].name)
+    // if (checked) {
+    //   // setTempCollection([])
+    //   if (name === lastFilter) {
+    //     const collection = jobCollection.filter(item => isWithin(initialFilters[name][value].name, item[name]))
+    //     setTempCollection(prev => [...prev, ...collection])
+    //   } else {
+    //     const collection = (tempCollection.length > 0
+    //       ? tempCollection
+    //       : jobCollection
+    //     ).filter(item => isWithin(initialFilters[name][value].name, item[name]))
+    //     setTempCollection(collection)
+    //   }
+    // } else {
+    //   if (name === lastFilter) {
+    //     // const collection = jobCollection.filter(item => isWithin(initialFilters[name][value].name, item[name]))
+    //     // setTempCollection(prev => [...prev, ...collection])
+    //     const collection = tempCollection.filter(item => !isWithin(initialFilters[name][value].name, item[name]))
+    //     setTempCollection(collection)
+    //   } else {
+    //     const collection = tempCollection.filter(item => !isWithin(initialFilters[name][value].name, item[name]))
+    //     setTempCollection(collection)
+    //   }
+    //   // const collection = tempCollection.filter(item => !isWithin(initialFilters[name][value].name, item[name]))
+    //   // setTempCollection(collection)
+    //   // setTempCollection
+    // }
+
+    // console.log(collection)
+    setIsSearching(false)
+  }
+
+  // console.log(tempCollection.length)
+  // console.log(jobCollection.length)
 
   return (
     <>
@@ -68,8 +239,12 @@ export default function Home({ jobCollection }) {
             <div className="lg:flex gap-4 p-4">
               <div className='grow'>
                 <h3 className='font-bold text-2xl mb-6'>Daftar Pekerjaan Terbaru</h3>
+                {isSearching && <h1>Sedang mencari</h1>}
                 <ul>
-                  {jobCollection.length > 0 && jobCollection.map((item, index) => {
+                  {/* {(tempCollection.length > 0
+                    ? tempCollection
+                    : jobCollection).map((item, index) => { */}
+                  {tempCollection.map((item, index) => {
                     moment.locale('id')
                     const formattedCreatedAt = moment(item.createdAt).format('D MMMM y');
                     const formattedcloseAt = moment(item.closeAt).format('D MMMM y');
@@ -114,57 +289,63 @@ export default function Home({ jobCollection }) {
               <div className="lg:w-96 sticky top-5 h-screen overflow-auto pr-4">
                 <div className='border radius-sm p-4 flex items-center mb-4 w-full'>
                   <IoSearchOutline size={17} />
-                  <input className='bg-white w-full ml-4 ring-0 focus:border-0 text-sm' placeholder='Pekerjaan apa yang sedang Anda cari?' />
+                  <input onKeyDown={handleKeyDown} onChange={e => setSearchTerm(e.target.value)} className='bg-white w-full ml-4 ring-0 focus:border-0 text-sm' placeholder='Pekerjaan apa yang sedang Anda cari?' />
                 </div>
                 <div className='border radius-sm p-4 mb-4 accent-gray-900 divide-y divide-gray-200'>
                   <div className='pb-6'>
                     <h3 className='font-bold text-lg mb-4'>Keahlian</h3>
-                    {expertise.map((item, index) => {
+
+                    {skills.map((item, index) => {
                       return (
                         <div className="flex items-center mb-4" key={index}>
-                          <input id={'expertise-' + index} type="checkbox" value="" className="w-4 h-4  rounded border-gray-300" />
-                          <label htmlFor={'expertise-' + index} className="ml-2">{item.name}</label>
+                          <input name='skills' id={'skills-' + index} onChange={handleFilter} type="checkbox" value={index} checked={filters['skills'][index]} className="w-4 h-4  rounded border-gray-300" />
+                          <label htmlFor={'skills-' + index} className="ml-2">{item.name}</label>
                         </div>
-
                       )
                     })}
+
                     <h6 className='text-xs text-center'>Selengkapnya <IoAddOutline className='inline' /> </h6>
                   </div>
                   <div className='pt-4 pb-2'>
                     <h3 className='font-bold text-lg mb-4'>Tipe Pekerjaan</h3>
-                    {type.map((item, index) => {
+
+                    {job_type.map((item, index) => {
                       return (
                         <div className="flex items-center mb-4" key={index}>
-                          <input id={'type-' + index} type="checkbox" value="" className="w-4 h-4  rounded border-gray-300" />
-                          <label htmlFor={'type-' + index} className="ml-2">{item.name}</label>
+                          <input name='job_type' id={'job_type-' + index} onChange={handleFilter} type="checkbox" value={item.id} checked={filters['job_type'][index]} className="w-4 h-4  rounded border-gray-300" />
+                          <label htmlFor={'job_type-' + index} className="ml-2">{item.name}</label>
                         </div>
 
                       )
                     })}
+
                   </div>
                   <div className='pt-4 pb-2'>
                     <h3 className='font-bold text-lg mb-4'>Kota</h3>
-                    {city.map((item, index) => {
+
+                    {location.map((item, index) => {
                       return (
                         <div className="flex items-center mb-4" key={index}>
-                          <input id={'city-' + index} type="checkbox" value="" className="w-4 h-4  rounded border-gray-300" />
-                          <label htmlFor={'city-' + index} className="ml-2">{item.name}</label>
+                          <input name='location' id={'location-' + index} onChange={handleFilter} type="checkbox" value={item.id} checked={filters['location'][index]} className="w-4 h-4  rounded border-gray-300" />
+                          <label htmlFor={'location-' + index} className="ml-2">{item.name}</label>
                         </div>
-
                       )
                     })}
+
                   </div>
                   <div className='pt-4 pb-2'>
                     <h3 className='font-bold text-lg mb-4'>Pengalaman</h3>
+
+
                     {experience.map((item, index) => {
                       return (
                         <div className="flex items-center mb-4" key={index}>
-                          <input id={'experience-' + index} type="checkbox" value="" className="w-4 h-4  rounded border-gray-300" />
+                          <input name='experience' id={'experience-' + index} onChange={handleFilter} type="checkbox" value={item.id} checked={filters['experience'][index]} className="w-4 h-4  rounded border-gray-300" />
                           <label htmlFor={'experience-' + index} className="ml-2">{item.name}</label>
                         </div>
-
                       )
                     })}
+
                   </div>
                 </div>
               </div>
@@ -172,8 +353,6 @@ export default function Home({ jobCollection }) {
           </div>
         </div>
       </main>
-
-
     </>
   )
 }
