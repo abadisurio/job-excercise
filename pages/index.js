@@ -7,6 +7,7 @@ import 'moment/locale/id';
 import { IoBusinessOutline, IoLocationOutline, IoBriefcaseOutline, IoSearchOutline, IoAddOutline } from "react-icons/io5";
 import { useNavbarHooks } from '../hooks/navbar';
 import { getAllJobCollection } from '../lib/api';
+import Link from 'next/link';
 
 const expertise = [
   { "id": "0", "name": "Back-End Developer" },
@@ -73,36 +74,38 @@ export default function Home({ jobCollection }) {
                     const formattedCreatedAt = moment(item.createdAt).format('D MMMM y');
                     const formattedcloseAt = moment(item.closeAt).format('D MMMM y');
                     return (
-                      <li className='flex p-4 border mb-6 rounded-sm' key={index}>
-                        {/* <Image
+                      <li key={index}>
+                        <Link href={'/jobs/' + item.id} className='flex p-4 border mb-6 rounded-sm' >
+                          {/* <Image
                                                 loader={({ src, width, quality }) => item.logo} width={96} height={96} /> */}
-                        <Image
-                          alt={item.title}
-                          className="w-24 h-24 object-cover mr-4"
-                          loader={() => item.logo}
-                          src={item.logo}
-                          width={96}
-                          height={96} />
-                        <div className='grow grid md:grid-cols-2'>
-                          <div className='grow'>
-                            <h5 className='font-bold'>{item.title}</h5>
-                            <div className='my-2 flex items-center gap-2 text-xs'>
-                              <IoBusinessOutline />
-                              <h5> {item.company} • {item.job_type}</h5>
+                          <Image
+                            alt={item.title}
+                            className="w-24 h-24 object-cover mr-4"
+                            loader={() => item.logo}
+                            src={item.logo}
+                            width={96}
+                            height={96} />
+                          <div className='grow grid md:grid-cols-2'>
+                            <div className='grow'>
+                              <h5 className='font-bold'>{item.title}</h5>
+                              <div className='my-2 flex items-center gap-2 text-xs'>
+                                <IoBusinessOutline />
+                                <h5> {item.company} • {item.job_type}</h5>
+                              </div>
+                              <div className='my-2 flex items-center gap-2 text-xs'>
+                                <IoLocationOutline />
+                                <h5> {item.location}  </h5>
+                                <IoBriefcaseOutline />
+                                <h5> {item.experience ? '1-3 tahun pengalaman' : 'Fresh Graduate'} </h5>
+                              </div>
                             </div>
-                            <div className='my-2 flex items-center gap-2 text-xs'>
-                              <IoLocationOutline />
-                              <h5> {item.location}  </h5>
-                              <IoBriefcaseOutline />
-                              <h5> {item.experience ? '1-3 tahun pengalaman' : 'Fresh Graduate'} </h5>
+                            <div className='text-xs text-gray-500 md:text-right'>
+                              <h6>Dibuat pada {formattedCreatedAt}</h6>
+                              <h6>Lamar sebelum {formattedcloseAt}</h6>
                             </div>
                           </div>
-                          <div className='text-xs text-gray-500 md:text-right'>
-                            <h6>Dibuat pada {formattedCreatedAt}</h6>
-                            <h6>Lamar sebelum {formattedcloseAt}</h6>
-                          </div>
-                        </div>
-                        {/* <h5>{item.logo}</h5> */}
+                          {/* <h5>{item.logo}</h5> */}
+                        </Link>
                       </li>
                     )
                   })}
@@ -178,6 +181,7 @@ export default function Home({ jobCollection }) {
 
 export async function getStaticProps() {
   const jobCollection = await getAllJobCollection()
+
   return {
     props: {
       jobCollection
