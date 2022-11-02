@@ -5,6 +5,7 @@ import { BsArrowUpRight, BsPeople, BsShare, BsHeart } from "react-icons/bs";
 import { getAllJobCollection, getJobDetail } from '../../lib/api';
 import { useNavbarHooks } from '../../hooks/navbar';
 import Link from 'next/link';
+import Head from 'next/head';
 
 export default function JobDetail({ jobDetail }) {
 
@@ -15,6 +16,10 @@ export default function JobDetail({ jobDetail }) {
 
     return (
         <>
+            <Head>
+                <title>{jobDetail.title} - Dicoding Jobs</title>
+                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+            </Head>
             <div className='container mx-auto pt-8'>
                 <Link href={'/'} className='text-xs underline mb-4'>Semua daftar pekerjaan <BsArrowUpRight className='inline' /> </Link>
                 <div className='flex mb-6 rounded-sm'>
