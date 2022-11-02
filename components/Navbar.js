@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { FaRegBell, FaAngleDown } from "react-icons/fa";
+import { FaRegBell, FaAngleDown, FaBriefcase } from "react-icons/fa";
 import { useNavbarHooks } from '../hooks/navbar';
 
 export default function Navbar() {
@@ -19,12 +19,17 @@ export default function Navbar() {
             <Link href={'/'}><h6 className='font-light'>Looking for job</h6></Link>
             <Link href={'/'}><h6 className='font-light'>Hiring</h6></Link>
             <div className="grow"></div>
+            <Link href={'/'} className="flex items-center gap-3 border border-neutral-600 p-3 rounded-sm">
+                <FaBriefcase className='text-blue-500 mx-2' size={16} />
+                <h6>Siap untuk di-interview</h6>
+                <FaAngleDown color='grey' />
+            </Link>
             <Link href={'/'} className="flex items-center gap-3">
                 <Image className="inline-block h-8 w-8 rounded-full ring-2 ring-offset-1 ring-offset-neutral-900 ring-blue-500 object-cover" src={require('../assets/image/default-avatar.jpg')} alt="{user.handle}" />
                 <FaAngleDown color='grey' />
             </Link>
             <Link href={'/'}>
-                <FaRegBell />
+                <FaRegBell size={24} />
             </Link>
         </nav>
     )
