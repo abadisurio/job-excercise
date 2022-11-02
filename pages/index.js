@@ -61,7 +61,9 @@ export default function Home({ jobCollection = [] }) {
   useEffect(() => {
     if (searchTerm !== '') setIsSearching(true)
     const delayDebounceFn = setTimeout(() => {
-      // console.log(searchTerm)
+
+      setFilters(prev => ({ ...prev, title: [true] }))
+      setOgFilters(prev => ({ ...prev, title: [{ name: searchTerm }] }))
       searchJob(searchTerm)
     }, 500)
 
@@ -72,7 +74,6 @@ export default function Home({ jobCollection = [] }) {
     const collection = jobCollection.filter(item => {
       let flag1 = true
       for (const category in filters) {
-        // console.log(item[category])
         let flag2 = false
         let adaYangDicheck = false
         for (let index = 0; index < filters[category].length; index++) {
@@ -101,7 +102,6 @@ export default function Home({ jobCollection = [] }) {
   }
 
   const searchJob = query => {
-    // console.log(query)
     if (query !== '') {
       const collection = jobCollection.filter(item => isWithin(query, item.title))
       setTempCollection(collection)
@@ -124,7 +124,8 @@ export default function Home({ jobCollection = [] }) {
     setIsSearching(false)
   }
 
-  console.log(filters, ogFilters)
+
+
   return (
     <>
       <Head>
@@ -152,9 +153,6 @@ export default function Home({ jobCollection = [] }) {
                 <h3 className='font-bold text-2xl mb-6'>Daftar Pekerjaan Terbaru</h3>
                 {isSearching && <h1>Sedang mencari</h1>}
                 <ul>
-                  {/* {(tempCollection.length > 0
-                    ? tempCollection
-                    : jobCollection).map((item, index) => { */}
                   {tempCollection.map((item, index) => {
                     moment.locale('id')
                     const formattedCreatedAt = moment(item.createdAt).format('D MMMM y');
@@ -162,8 +160,6 @@ export default function Home({ jobCollection = [] }) {
                     return (
                       <li key={index}>
                         <Link href={'/jobs/' + item.id} className='flex p-4 border mb-6 rounded-sm' >
-                          {/* <Image
-                                                loader={({ src, width, quality }) => item.logo} width={96} height={96} /> */}
                           <Image
                             alt={item.title}
                             className="w-24 h-24 object-cover mr-4"
@@ -190,7 +186,6 @@ export default function Home({ jobCollection = [] }) {
                               <h6>Lamar sebelum {formattedcloseAt}</h6>
                             </div>
                           </div>
-                          {/* <h5>{item.logo}</h5> */}
                         </Link>
                       </li>
                     )
@@ -205,40 +200,31 @@ export default function Home({ jobCollection = [] }) {
                 <div className='border radius-sm p-4 mb-4 accent-gray-900 divide-y divide-gray-200'>
                   {Object.keys(ogFilters).map(category => {
 
-                    if (category === 'experience') {
-                      return (
-                        <div className='pt-4 pb-2'>
-                          <h3 className='font-bold text-lg mb-4'>{filterFields[category]}</h3>
+                    if (category === 'title') return null
+                    return (
+                      <div className='py-6'>
+                        <h3 className='font-bold text-lg mb-4'>{filterFields[category]}</h3>
 
-
-                          {experience.map((item, index) => {
+                        {category === 'experience'
+                          ? experience.map((item, index) => {
                             return (
                               <div className="flex items-center mb-4" key={index}>
                                 <input name='experience' id={'experience-' + index} onChange={handleFilter} type="checkbox" value={item.id} checked={filters['experience'][index]} className="w-4 h-4  rounded border-gray-300" />
                                 <label htmlFor={'experience-' + index} className="ml-2">{item.name}</label>
                               </div>
                             )
+                          })
+                          : ogFilters[category].map((item) => {
+                            return (
+                              <div className="flex items-center mb-4" key={item.id}>
+                                <input name={category} id={category + '-' + item.id} onChange={handleFilter} type="checkbox" value={item.id} checked={filters[category][item.id]} className="w-4 h-4  rounded border-gray-300" />
+                                <label htmlFor={category + '-' + item.id} className="ml-2">{item.name}</label>
+                              </div>
+                            )
                           })}
-
-                        </div>
-
-                      )
-                    }
-
-                    return (
-                      <div className='pb-6'>
-                        <h3 className='font-bold text-lg mb-4'>{filterFields[category]}</h3>
-
-                        {ogFilters[category].map((item, index) => {
-                          return (
-                            <div className="flex items-center mb-4" key={item.id}>
-                              <input name={category} id={category + '-' + item.id} onChange={handleFilter} type="checkbox" value={item.id} checked={filters[category][item.id]} className="w-4 h-4  rounded border-gray-300" />
-                              <label htmlFor={category + '-' + item.id} className="ml-2">{item.name}</label>
-                            </div>
-                          )
-                        })}
-
-                        <h6 className='text-xs text-center'>Selengkapnya <IoAddOutline className='inline' /> </h6>
+                        {category === 'skills' && (
+                          <h6 className='text-xs text-center'>Selengkapnya <IoAddOutline className='inline' /> </h6>
+                        )}
                       </div>
 
                     )
