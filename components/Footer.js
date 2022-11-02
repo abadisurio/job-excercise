@@ -15,7 +15,7 @@ export default function Footer() {
                     Kec. Cibeunying Kaler, Kota Bandung Jawa Barat 40123
                 </p>
                 <div className='mt-12 mb-8 h-1 w-full border-b-2 border-neutral-200 '></div>
-                <div className='grid grid-cols-12 items-center gap-4'>
+                <div className='grid md:grid-cols-12 items-center gap-4'>
                     <h3 className='font-bold col-span-4 text-gray-700'>Decode ideas Discover Potential</h3>
                     <div className="col-span-3 flex gap-6 text-xl text-gray-700">
                         <AiFillInstagram />

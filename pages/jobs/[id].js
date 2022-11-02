@@ -20,9 +20,9 @@ export default function JobDetail({ jobDetail }) {
                 <title>{jobDetail.title} - Dicoding Jobs</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
-            <div className='container mx-auto pt-8'>
+            <div className='container mx-auto pt-8 px-5'>
                 <Link href={'/'} className='text-xs underline mb-4'>Semua daftar pekerjaan <BsArrowUpRight className='inline' /> </Link>
-                <div className='flex mb-6 rounded-sm'>
+                <div className='flex flex-wrap mb-6 rounded-sm'>
                     <Image
                         alt={jobDetail.title}
                         className="w-24 h-24 object-cover mr-4"
@@ -30,11 +30,11 @@ export default function JobDetail({ jobDetail }) {
                         src={jobDetail.logo}
                         width={96}
                         height={96} />
-                    <div className='grow grid md:grid-cols-2'>
+                    <div className='grow grid  md:grid-cols-2'>
                         <div className='grow'>
                             <h1 className='text-2xl font-bold'>{jobDetail.title}</h1>
                             <h3 className='font-bold text-lg'>Sektor Bisnis: {jobDetail.sector}</h3>
-                            <div className='my-2 flex items-center gap-2 text-xs'>
+                            <div className='my-2 flex flex-wrap items-center gap-2 text-xs'>
                                 <IoBusinessOutline size={16} />
                                 <h5> {jobDetail.company}</h5>
                                 <IoLocationOutline size={16} />
@@ -60,8 +60,8 @@ export default function JobDetail({ jobDetail }) {
                     </div>
                 </div>
             </div>
-            <div className='mt-12 mb-6 h-1 w-full border-b-2 border-neutral-100 '></div>
-            <div className='md:w-3/5 mx-auto'>
+            <div className='mt-12 mb-6 h-1 w-full border-b-2 border-neutral-100 px-5'></div>
+            <div className='md:w-3/5 mx-auto px-5'>
                 <div className="flex mb-8">
                     <div className="bg-blue-50 border border-blue-400 px-4 py-2 rounded-full mr-4">
                         <span className='font-bold text-sm text-blue-500'>{jobDetail.job_type}</span>
