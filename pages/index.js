@@ -104,28 +104,67 @@ export default function Home({ jobCollection = [] }) {
     //   // isWithin(initialFilters[filterItem][index].name, item[filterItem])
     // })
 
-    const collection = jobCollection.filter((item) => {
+    const collection = jobCollection.filter((item, index) => {
+      console.log(item['title'])
+      let flag1 = true
       for (const category in filters) {
-        // console.log(category)
+        console.log(category)
         // console.log(filters[category])
+        let flag2 = false
+        let adaYangDicheck = false
         for (let index = 0; index < filters[category].length; index++) {
           // console.log()
+          // flag2 = false
           if (filters[category][index]) {
-            if (!isWithin(initialFilters[category][index].name, item[category])) {
-
-              console.log(initialFilters[category][index].name)
-              return true
+            adaYangDicheck = true
+            // flag2 = false
+            console.log('-- yang lagi dicari --- ', category, ' - ', initialFilters[category][index].name)
+            console.log('-- ada yg dicheck nih - ', category, ' - ', item[category])
+            console.log('--', isWithin(initialFilters[category][index].name, item[category]))
+            if (isWithin(initialFilters[category][index].name, item[category])) {
+              console.log('- masuk')
+              flag2 = true
             } else {
+              console.log('- ga masuk')
+              // flag2 = false
+              // return false
               // return true
             }
           } else {
-            return false
+            // flag2 = true
           }
         }
+        console.log(category, flag2)
+        console.log('ada yang dicheck', adaYangDicheck)
+        if (!adaYangDicheck) {
+          console.log('lolos')
+        } else {
+          if (flag2) {
+            console.log('lolos')
+          } else {
+            console.log('ga lolos')
+            flag1 = false
+
+          }
+
+          // console.log('ga lolos')
+        }
+        // console.log('lolosin ga? - ', (!adaYangDicheck
+        //   ? 'iya'
+        //   : flag2
+        //     ? 'iya'
+        //     : 'ga'
+        // ))
+        // console.log('masuk ga?', flag2)
+        // console.log('jadinya?')
+        // return flag2
         // if (item[key] === undefined || item[key] !== filters[key])
         // return false;
+        // flag1 = flag2
+        // if (flag2) return true
       }
-      return true;
+      console.log('overall', flag1)
+      return flag1;
     });
 
     console.log(collection)
