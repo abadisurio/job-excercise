@@ -49,7 +49,6 @@ export default function Home({ jobCollection = [] }) {
   const navbar = useNavbarHooks()
   const [tempCollection, setTempCollection] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
-  const [lastFilter, setlastFilter] = useState('')
   const [filters, setFilters] = useState(
     {
       skills: skills.map(() => false),
@@ -76,112 +75,28 @@ export default function Home({ jobCollection = [] }) {
   }, [searchTerm])
 
   useEffect(() => {
-    // const collection = []
-    // jobCollection.map(jobItem => {
-    //   // Object.keys(item).map(filterItem => {
-    //   //   console.log(filterItem)
-    //   //   console.log(filters[filterItem])
-
-    //   // })
-
-    //   Object.keys(filters).map(filterItem => {
-    //     // console.log(filterItem)
-    //     // console.log(filters[filterItem])
-
-    //     filters[filterItem].map((item, index) => {
-    //       // console.log(item, index)
-    //       if (item) {
-    //         // console.log(filterItem, initialFilters[filterItem][index].name)
-    //         // console.log(initialFilters[filterItem][index].name)
-    //         // console.log(initialFilters[filterItem][index].name === jobItem[filterItem])
-    //         if (isWithin(initialFilters[filterItem][index].name, jobItem[filterItem])) {
-    //           // console.log(jobItem)
-    //           collection.push(jobItem)
-    //         }
-    //       }
-    //     })
-    //   })
-    //   // isWithin(initialFilters[filterItem][index].name, item[filterItem])
-    // })
-
-    const collection = jobCollection.filter((item, index) => {
-      console.log(item['title'])
+    const collection = jobCollection.filter(item => {
       let flag1 = true
       for (const category in filters) {
-        console.log(category)
-        // console.log(filters[category])
         let flag2 = false
         let adaYangDicheck = false
         for (let index = 0; index < filters[category].length; index++) {
-          // console.log()
-          // flag2 = false
           if (filters[category][index]) {
             adaYangDicheck = true
-            // flag2 = false
-            console.log('-- yang lagi dicari --- ', category, ' - ', initialFilters[category][index].name)
-            console.log('-- ada yg dicheck nih - ', category, ' - ', item[category])
-            console.log('--', isWithin(initialFilters[category][index].name, item[category]))
             if (isWithin(initialFilters[category][index].name, item[category])) {
-              console.log('- masuk')
               flag2 = true
-            } else {
-              console.log('- ga masuk')
-              // flag2 = false
-              // return false
-              // return true
             }
-          } else {
-            // flag2 = true
           }
         }
-        console.log(category, flag2)
-        console.log('ada yang dicheck', adaYangDicheck)
-        if (!adaYangDicheck) {
-          console.log('lolos')
-        } else {
-          if (flag2) {
-            console.log('lolos')
-          } else {
-            console.log('ga lolos')
+        if (adaYangDicheck) {
+          if (!flag2) {
             flag1 = false
-
           }
-
-          // console.log('ga lolos')
         }
-        // console.log('lolosin ga? - ', (!adaYangDicheck
-        //   ? 'iya'
-        //   : flag2
-        //     ? 'iya'
-        //     : 'ga'
-        // ))
-        // console.log('masuk ga?', flag2)
-        // console.log('jadinya?')
-        // return flag2
-        // if (item[key] === undefined || item[key] !== filters[key])
-        // return false;
-        // flag1 = flag2
-        // if (flag2) return true
       }
-      console.log('overall', flag1)
       return flag1;
     });
-
-    console.log(collection)
     setTempCollection(collection)
-    // Object.keys(filters).map(filterItem => {
-    //   // console.log(filterItem)
-    //   // console.log(this[filterItem])
-    //   if (filterItem === 'experience') return
-    //   filters[filterItem].map((item, index) => {
-    //     if (item) {
-    //       console.log(filterItem, initialFilters[filterItem][index].name)
-    //       console.log(collection)
-    //     }
-    //     // if(filterItem)
-    //   })
-    //   // tempCollection.filter(item => )
-    // })
   }, [filters])
 
   const handleKeyDown = (event) => {
@@ -193,12 +108,9 @@ export default function Home({ jobCollection = [] }) {
   const searchJob = query => {
     console.log(query)
     if (query !== '') {
-      // console.log(jobCollection)
       const collection = jobCollection.filter(item => isWithin(query, item.title))
       setTempCollection(collection)
       setIsSearching(false)
-    } else {
-      // setTempCollection(jobCollection)
     }
   }
 
@@ -206,9 +118,6 @@ export default function Home({ jobCollection = [] }) {
     setIsSearching(true)
     const { name, value, checked } = e.target
     if (name === 'experience') return
-    // console.log(name, value, checked)
-    // console.log(name, lastFilter, name === lastFilter)
-    // setlastFilter(name)
     setFilters(prev => {
       const newarr = filters[name]
       newarr[value] = checked
@@ -217,41 +126,8 @@ export default function Home({ jobCollection = [] }) {
         [name]: newarr
       }
     })
-
-    // console.log(initialFilters[name][value].name)
-    // if (checked) {
-    //   // setTempCollection([])
-    //   if (name === lastFilter) {
-    //     const collection = jobCollection.filter(item => isWithin(initialFilters[name][value].name, item[name]))
-    //     setTempCollection(prev => [...prev, ...collection])
-    //   } else {
-    //     const collection = (tempCollection.length > 0
-    //       ? tempCollection
-    //       : jobCollection
-    //     ).filter(item => isWithin(initialFilters[name][value].name, item[name]))
-    //     setTempCollection(collection)
-    //   }
-    // } else {
-    //   if (name === lastFilter) {
-    //     // const collection = jobCollection.filter(item => isWithin(initialFilters[name][value].name, item[name]))
-    //     // setTempCollection(prev => [...prev, ...collection])
-    //     const collection = tempCollection.filter(item => !isWithin(initialFilters[name][value].name, item[name]))
-    //     setTempCollection(collection)
-    //   } else {
-    //     const collection = tempCollection.filter(item => !isWithin(initialFilters[name][value].name, item[name]))
-    //     setTempCollection(collection)
-    //   }
-    //   // const collection = tempCollection.filter(item => !isWithin(initialFilters[name][value].name, item[name]))
-    //   // setTempCollection(collection)
-    //   // setTempCollection
-    // }
-
-    // console.log(collection)
     setIsSearching(false)
   }
-
-  // console.log(tempCollection.length)
-  // console.log(jobCollection.length)
 
   return (
     <>
