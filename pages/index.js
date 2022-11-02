@@ -13,11 +13,11 @@ import { isWithin } from '../lib/util';
 
 
 const experience = [
-  { "id": "0", "name": "Freshgraduate", "value": "" },
-  { "id": "1", "name": "1-3 tahun", "value": "" },
-  { "id": "2", "name": "3-5 tahun", "value": "" },
-  { "id": "3", "name": "5-10 tahun", "value": "" },
-  { "id": "4", "name": "Lebih dari 10 tahun", "value": "" },
+  { "id": "0", "name": "Freshgraduate", "value": false },
+  { "id": "1", "name": "1-3 tahun", "value": true },
+  { "id": "2", "name": "3-5 tahun", "value": true },
+  { "id": "3", "name": "5-10 tahun", "value": true },
+  { "id": "4", "name": "Lebih dari 10 tahun", "value": true },
 ]
 
 const filterFields = {
@@ -49,7 +49,7 @@ export default function Home({ jobCollection = [] }) {
         },
         switch: {
           ...prev.switch,
-          [key]: filters2.map((item, index) => false),
+          [key]: filters2.map(() => false),
 
         }
       }
@@ -64,7 +64,7 @@ export default function Home({ jobCollection = [] }) {
     const delayDebounceFn = setTimeout(() => {
 
       setFilters(prev => ({ ...prev, title: [true] }))
-      setOgFilters(prev => ({ ...prev, title: [{ name: searchTerm }] }))
+      setOgFilters(prev => ({ ...prev, title: [{ value: searchTerm }] }))
       searchJob(searchTerm)
     }, 500)
 
@@ -80,8 +80,14 @@ export default function Home({ jobCollection = [] }) {
         for (let index = 0; index < filters[category].length; index++) {
           if (filters[category][index]) {
             adaYangDicheck = true
-            if (isWithin(ogFilters[category][index].name, item[category])) {
-              flag2 = true
+            if (category === 'experience') {
+              if (ogFilters[category][index].value === item[category]) {
+                flag2 = true
+              }
+            } else {
+              if (isWithin(ogFilters[category][index].value, item[category])) {
+                flag2 = true
+              }
             }
           }
         }
@@ -113,7 +119,6 @@ export default function Home({ jobCollection = [] }) {
   const handleFilter = (e) => {
     setIsSearching(true)
     const { name, value, checked } = e.target
-    if (name === 'experience') return
     setFilters(prev => {
       const newarr = filters[name]
       newarr[value] = checked
