@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import arrow from '../assets/image/header-arrow.png'
 import moment from 'moment';
 import 'moment/locale/id';
-import { IoBusinessOutline, IoLocationOutline, IoBriefcaseOutline, IoSearchOutline, IoAddOutline } from "react-icons/io5";
+import { IoBusinessOutline, IoLocationOutline, IoBriefcaseOutline, IoSearchOutline, IoAddOutline, IoGlassesOutline } from "react-icons/io5";
+import { GiThink, GiInfo } from "react-icons/gi";
 import { useNavbarHooks } from '../hooks/navbar';
 import { getAllJobCollection } from '../lib/api';
 import Link from 'next/link';
@@ -151,7 +152,17 @@ export default function Home({ jobCollection = [] }) {
             <div className="lg:flex gap-4 p-4">
               <div className='grow'>
                 <h3 className='font-bold text-2xl mb-6'>Daftar Pekerjaan Terbaru</h3>
-                {isSearching && <h1>Sedang mencari</h1>}
+
+                {isSearching && <div className='p-3 bg-indigo-200 rounded-lg'>
+                  <h1 className='text-2xl font-bold '><IoGlassesOutline className='inline text-6xl' />Sedang mencari</h1>
+                </div>}
+                {!isSearching && tempCollection.length === 0 && <div className='p-3 bg-orange-200 rounded-lg'>
+                  <h1 className='text-2xl font-bold '><GiThink className='inline text-6xl' /> Pekerjaan yang kamu cari belum terlihat  </h1>
+                  <h6 className='ml-12 my-3'><GiInfo className='inline' /> coba ganti kata kunci atau filter dulu yuk</h6>
+                </div>}
+                {(tempCollection.length !== 0 && tempCollection.length !== jobCollection.length) && <div className='p-3 mb-3 bg-neutral-200 rounded-sm'>
+                  <h6 className=''><GiInfo className='inline' /> memunculkan {tempCollection.length} hasil</h6>
+                </div>}
                 <ul>
                   {tempCollection.map((item, index) => {
                     moment.locale('id')
