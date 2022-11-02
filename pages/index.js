@@ -10,59 +10,53 @@ import { getAllJobCollection } from '../lib/api';
 import Link from 'next/link';
 import { isWithin } from '../lib/util';
 
-const skills = [
-  { "id": "0", "name": "Back-End Developer" },
-  { "id": "1", "name": "Front-End Developer" },
-  { "id": "2", "name": "Product Manager" },
-  { "id": "3", "name": "Product Designer" },
-  { "id": "4", "name": "iOS Developer" },
-]
 
-const job_type = [
-  { "id": "0", "name": "Full-Time" },
-  { "id": "1", "name": "Freelance" },
-  { "id": "2", "name": "Intern" },
-  { "id": "3", "name": "Bisa Remote" },
-]
-const location = [
-  { "id": "0", "name": "Bandung" },
-  { "id": "1", "name": "Jakarta" },
-  { "id": "2", "name": "Yogyakarta" },
-]
 const experience = [
-  { "id": "0", "name": "Freshgraduate" },
-  { "id": "1", "name": "1-3 tahun" },
-  { "id": "2", "name": "3-5 tahun" },
-  { "id": "3", "name": "5-10 tahun" },
-  { "id": "4", "name": "Lebih dari 10 tahun" },
+  { "id": "0", "name": "Freshgraduate", "value": "" },
+  { "id": "1", "name": "1-3 tahun", "value": "" },
+  { "id": "2", "name": "3-5 tahun", "value": "" },
+  { "id": "3", "name": "5-10 tahun", "value": "" },
+  { "id": "4", "name": "Lebih dari 10 tahun", "value": "" },
 ]
 
-const initialFilters = {
-  skills,
-  job_type,
-  location,
-  experience,
+const filterFields = {
+  "skills": "Keahlian",
+  "job_type": "Tipe Pekerjaan",
+  "location": "Kota",
+  "experience": "Pengalaman",
 }
+
 
 export default function Home({ jobCollection = [] }) {
 
   const navbar = useNavbarHooks()
   const [tempCollection, setTempCollection] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
-  const [filters, setFilters] = useState(
-    {
-      skills: skills.map(() => false),
-      job_type: job_type.map(() => false),
-      location: location.map(() => false),
-      experience: experience.map(() => false)
-    }
-  )
+  const [filters, setFilters] = useState({})
+  const [ogFilters, setOgFilters] = useState({})
   const [isSearching, setIsSearching] = useState(false)
 
   useEffect(() => {
     navbar.setVariant('dark')
-    // setTempCollection(jobCollection)
+    const filtersSource = Object.keys(filterFields).reduce((prev, key) => {
+      const filters2 = [...new Set(jobCollection.map(item => item[key]))];
+      return {
+        ...prev,
+        og: {
+          ...prev.og,
+          [key]: filters2.map((item, index) => ({ id: index, name: item, value: item })),
+        },
+        switch: {
+          ...prev.switch,
+          [key]: filters2.map((item, index) => false),
+
+        }
+      }
+    }, [])
+    setFilters(filtersSource.switch)
+    setOgFilters(filtersSource.og)
   }, [])
+
 
   useEffect(() => {
     if (searchTerm !== '') setIsSearching(true)
@@ -78,12 +72,13 @@ export default function Home({ jobCollection = [] }) {
     const collection = jobCollection.filter(item => {
       let flag1 = true
       for (const category in filters) {
+        // console.log(item[category])
         let flag2 = false
         let adaYangDicheck = false
         for (let index = 0; index < filters[category].length; index++) {
           if (filters[category][index]) {
             adaYangDicheck = true
-            if (isWithin(initialFilters[category][index].name, item[category])) {
+            if (isWithin(ogFilters[category][index].name, item[category])) {
               flag2 = true
             }
           }
@@ -106,7 +101,7 @@ export default function Home({ jobCollection = [] }) {
   }
 
   const searchJob = query => {
-    console.log(query)
+    // console.log(query)
     if (query !== '') {
       const collection = jobCollection.filter(item => isWithin(query, item.title))
       setTempCollection(collection)
@@ -129,6 +124,7 @@ export default function Home({ jobCollection = [] }) {
     setIsSearching(false)
   }
 
+  console.log(filters, ogFilters)
   return (
     <>
       <Head>
@@ -207,61 +203,46 @@ export default function Home({ jobCollection = [] }) {
                   <input onKeyDown={handleKeyDown} onChange={e => setSearchTerm(e.target.value)} className='bg-white w-full ml-4 ring-0 focus:border-0 text-sm' placeholder='Pekerjaan apa yang sedang Anda cari?' />
                 </div>
                 <div className='border radius-sm p-4 mb-4 accent-gray-900 divide-y divide-gray-200'>
-                  <div className='pb-6'>
-                    <h3 className='font-bold text-lg mb-4'>Keahlian</h3>
+                  {Object.keys(ogFilters).map(category => {
 
-                    {skills.map((item, index) => {
+                    if (category === 'experience') {
                       return (
-                        <div className="flex items-center mb-4" key={index}>
-                          <input name='skills' id={'skills-' + index} onChange={handleFilter} type="checkbox" value={index} checked={filters['skills'][index]} className="w-4 h-4  rounded border-gray-300" />
-                          <label htmlFor={'skills-' + index} className="ml-2">{item.name}</label>
-                        </div>
-                      )
-                    })}
+                        <div className='pt-4 pb-2'>
+                          <h3 className='font-bold text-lg mb-4'>{filterFields[category]}</h3>
 
-                    <h6 className='text-xs text-center'>Selengkapnya <IoAddOutline className='inline' /> </h6>
-                  </div>
-                  <div className='pt-4 pb-2'>
-                    <h3 className='font-bold text-lg mb-4'>Tipe Pekerjaan</h3>
 
-                    {job_type.map((item, index) => {
-                      return (
-                        <div className="flex items-center mb-4" key={index}>
-                          <input name='job_type' id={'job_type-' + index} onChange={handleFilter} type="checkbox" value={item.id} checked={filters['job_type'][index]} className="w-4 h-4  rounded border-gray-300" />
-                          <label htmlFor={'job_type-' + index} className="ml-2">{item.name}</label>
+                          {experience.map((item, index) => {
+                            return (
+                              <div className="flex items-center mb-4" key={index}>
+                                <input name='experience' id={'experience-' + index} onChange={handleFilter} type="checkbox" value={item.id} checked={filters['experience'][index]} className="w-4 h-4  rounded border-gray-300" />
+                                <label htmlFor={'experience-' + index} className="ml-2">{item.name}</label>
+                              </div>
+                            )
+                          })}
+
                         </div>
 
                       )
-                    })}
+                    }
 
-                  </div>
-                  <div className='pt-4 pb-2'>
-                    <h3 className='font-bold text-lg mb-4'>Kota</h3>
+                    return (
+                      <div className='pb-6'>
+                        <h3 className='font-bold text-lg mb-4'>{filterFields[category]}</h3>
 
-                    {location.map((item, index) => {
-                      return (
-                        <div className="flex items-center mb-4" key={index}>
-                          <input name='location' id={'location-' + index} onChange={handleFilter} type="checkbox" value={item.id} checked={filters['location'][index]} className="w-4 h-4  rounded border-gray-300" />
-                          <label htmlFor={'location-' + index} className="ml-2">{item.name}</label>
-                        </div>
-                      )
-                    })}
+                        {ogFilters[category].map((item, index) => {
+                          return (
+                            <div className="flex items-center mb-4" key={item.id}>
+                              <input name={category} id={category + '-' + item.id} onChange={handleFilter} type="checkbox" value={item.id} checked={filters[category][item.id]} className="w-4 h-4  rounded border-gray-300" />
+                              <label htmlFor={category + '-' + item.id} className="ml-2">{item.name}</label>
+                            </div>
+                          )
+                        })}
 
-                  </div>
-                  <div className='pt-4 pb-2'>
-                    <h3 className='font-bold text-lg mb-4'>Pengalaman</h3>
+                        <h6 className='text-xs text-center'>Selengkapnya <IoAddOutline className='inline' /> </h6>
+                      </div>
 
-
-                    {experience.map((item, index) => {
-                      return (
-                        <div className="flex items-center mb-4" key={index}>
-                          <input name='experience' id={'experience-' + index} onChange={handleFilter} type="checkbox" value={item.id} checked={filters['experience'][index]} className="w-4 h-4  rounded border-gray-300" />
-                          <label htmlFor={'experience-' + index} className="ml-2">{item.name}</label>
-                        </div>
-                      )
-                    })}
-
-                  </div>
+                    )
+                  })}
                 </div>
               </div>
             </div>
